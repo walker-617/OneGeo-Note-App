@@ -7,24 +7,38 @@ import Header from "./header";
 import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
 import { MdDelete } from "react-icons/md";
 
+import { db } from "../utils/firebase";
+import { getDoc, doc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+
 function Home() {
   const [notes, setNotes] = useState([]);
   const [prevNote, setPrevNote] = useState("");
 
+  const [loading, setLoading] = useState(false);
+
   const [notesChanged, setNotesChanged] = useState(false);
 
   useEffect(() => {
-    const notes = [
-      "walker",
-      "avinash",
-      "jahnav",
-      "govind",
-      "krishna",
-      "nivas",
-      "vishnu",
-      "kushal",
-    ];
-    setNotes(notes);
+    setLoading(true);
+    const authStateChanged = getAuth().onAuthStateChanged((user) => {
+      if (user) {
+        getDoc(doc(db, user.email, "notes")).then((doc) => {
+          if (doc?.data()?.notes) {
+            setNotes(doc.data().notes);
+            setLoading(false);
+          } else {
+            setNotes([]);
+          }
+        });
+      } else {
+        setLoading(false);
+      }
+    });
+
+    return () => {
+      authStateChanged();
+    };
   }, []);
 
   function allowDrop(ev) {
@@ -40,7 +54,7 @@ function Home() {
     var data = ev.dataTransfer.getData("text");
     const newNote = ev.target.value + (ev.target.value ? " " : "") + data;
     if (notes.includes(newNote)) {
-      setError("Note already exists","rgb(216, 31, 31)");
+      setError("Note already exists", "rgb(216, 31, 31)");
       ev.dataTransfer?.clearData();
       return;
     }
@@ -62,11 +76,18 @@ function Home() {
     }
     if (notes.includes(note)) {
       if (note === "") {
-        setError("Empty note already exists","rgb(216, 31, 31)");
+        setError("Empty note already exists", "rgb(216, 31, 31)");
       } else {
-        setError("Note already exists","rgb(216, 31, 31)");
+        setError("Note already exists", "rgb(216, 31, 31)");
       }
       ev.dataTransfer?.clearData();
+      // setPrevNote("");
+      return;
+    }
+    if (prevNote) {
+      setError("Note already exists", "rgb(216, 31, 31)");
+      ev.dataTransfer?.clearData();
+      // setPrevNote("");
       return;
     }
     updateChange();
@@ -87,23 +108,27 @@ function Home() {
     ev.preventDefault();
     const note = ev.target.value;
     if (note === prevNote) {
+      setPrevNote("");
+      ev.dataTransfer?.clearData();
       return;
     }
-    setNotesChanged(true);
     if (notes.includes(note)) {
       if (note === "") {
-        setError("Empty note already exists","rgb(216, 31, 31)");
+        setError("Empty note already exists", "rgb(216, 31, 31)");
       } else {
-        setError("Note already exists","rgb(216, 31, 31)");
+        setError("Note already exists", "rgb(216, 31, 31)");
       }
       ev.target.value = prevNote;
       setPrevNote("");
       ev.dataTransfer?.clearData();
       return;
     }
+    updateChange();
     const newNotes = [...notes];
     newNotes[i] = note;
     setNotes(newNotes);
+    setPrevNote("");
+    ev.dataTransfer?.clearData();
   }
 
   function deleteNote(ev, i) {
@@ -112,14 +137,18 @@ function Home() {
     const newNotes = [...notes];
     newNotes.splice(i, 1);
     setNotes(newNotes);
-    setNotesChanged(true);
+    updateChange();
   }
 
   function updateChange() {
     setNotesChanged(true);
   }
 
-  function setError(error,color){
+  function cancelChange() {
+    setNotesChanged(false);
+  }
+
+  function setError(error, color) {
     document.getElementById("error").style.display = "block";
     document.getElementById("error").style.background = color;
     document.getElementById("error").innerText = error;
@@ -141,7 +170,12 @@ function Home() {
 
   return (
     <div className="home">
-      <Header />
+      <Header
+        notes={notes}
+        setNotes={setNotes}
+        notesChanged={notesChanged}
+        setNotesChanged={setNotesChanged}
+      />
       <div className="error" id="error"></div>
       <div
         className="notes-area"
@@ -149,6 +183,17 @@ function Home() {
         onDragOver={(e) => allowDrop(e)}
         onDoubleClick={(e) => addNote(e)}
       >
+        {loading ? <div style={{ fontWeight: "bold" }}>Loading...</div> : ""}
+        {!loading && notes.length === 0 ? (
+          <div>
+            <div>No notes to show.</div>
+            <div style={{ fontWeight: "bold" }}>
+              Double click to create one.
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
         {notes.map((note, i) => (
           <div
             className="note-container"
