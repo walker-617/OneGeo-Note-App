@@ -11,11 +11,10 @@ import { FaUserLarge } from "react-icons/fa6";
 
 import { db } from "../utils/firebase";
 import { getDoc, setDoc, doc, onSnapshot } from "firebase/firestore";
-import { update } from "firebase/database";
+
+import logo from "../assets/logo_black.png";
 
 function Header({ notes, setNotes, notesChanged, setNotesChanged }) {
-  const [signedIn, setSignedIn] = useState(false);
-
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -40,10 +39,7 @@ function Header({ notes, setNotes, notesChanged, setNotesChanged }) {
             });
           }
         });
-        setSignedIn(true);
         setUser(user);
-      } else {
-        setSignedIn(false);
       }
       setLoading(false);
     });
@@ -60,7 +56,6 @@ function Header({ notes, setNotes, notesChanged, setNotesChanged }) {
     signInWithPopup(getAuth(), new GoogleAuthProvider())
       .then((result) => {
         setUser(result.user);
-        setSignedIn(true);
       })
       .catch((error) => {
         console.log(error);
@@ -71,7 +66,10 @@ function Header({ notes, setNotes, notesChanged, setNotesChanged }) {
     getAuth()
       .signOut()
       .then(() => {
-        setSignedIn(false);
+        setUser(null);
+        setDatabaseChanged(false);
+        setNotesChanged(false);
+        setUpdateNeeded(false);
       })
       .catch((error) => {
         console.log(error);
@@ -104,9 +102,12 @@ function Header({ notes, setNotes, notesChanged, setNotesChanged }) {
 
   return (
     <div className="header">
-      {!signedIn && !loading ? (
+      {!user && !loading ? (
         <>
-          <div className="title">NOTE TAKER</div>
+          <div className="user">
+            <img src={logo} alt="logo" className="logo"/>
+            <div className="title">NOTE TAKER</div>
+          </div>
           <div className="signin">
             <div>To save the notes, sign in with</div>
             <div className="google-icon" onClick={() => GoogleSignIn()}>
@@ -151,10 +152,10 @@ function Header({ notes, setNotes, notesChanged, setNotesChanged }) {
               style={
                 databaseChanged
                   ? { backgroundColor: "rgb(207, 134, 0)" }
-                  : { backgroundColor: "green" }
+                  : { backgroundColor: "green", cursor: "not-allowed" }
               }
               id="sync"
-              onClick={() => sync()}
+              onClick={databaseChanged ? () => sync() : () => {}}
             >
               <MdCloudSync style={{ fontSize: "25px" }} />{" "}
             </div>
@@ -163,10 +164,10 @@ function Header({ notes, setNotes, notesChanged, setNotesChanged }) {
               style={
                 notesChanged
                   ? { backgroundColor: "rgb(207, 134, 0)" }
-                  : { backgroundColor: "green" }
+                  : { backgroundColor: "green", cursor: "not-allowed" }
               }
               id="upload"
-              onClick={() => upload()}
+              onClick={notesChanged ? () => upload() : () => {}}
             >
               <MdCloudUpload style={{ fontSize: "25px" }} />
             </div>

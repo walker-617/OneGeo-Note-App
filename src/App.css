@@ -162,6 +162,11 @@ textarea{
   font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
+.logo{
+  height: 30px;
+  width: 30px;
+}
+
 .signin{
   display: flex;
   justify-content: center;

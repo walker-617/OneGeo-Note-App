@@ -26,14 +26,12 @@ function Home() {
         getDoc(doc(db, user.email, "notes")).then((doc) => {
           if (doc?.data()?.notes) {
             setNotes(doc.data().notes);
-            setLoading(false);
           } else {
             setNotes([]);
           }
         });
-      } else {
-        setLoading(false);
       }
+      setLoading(false);
     });
 
     return () => {
@@ -43,6 +41,7 @@ function Home() {
 
   function allowDrop(ev) {
     ev.preventDefault();
+    console.log("Hi");
   }
 
   function drag(ev, i) {
@@ -138,6 +137,8 @@ function Home() {
     newNotes.splice(i, 1);
     setNotes(newNotes);
     updateChange();
+    ev.dataTransfer?.clearData();
+    setPrevNote("");
   }
 
   function updateChange() {
@@ -164,8 +165,8 @@ function Home() {
 
   function exportToXLSX() {
     const data = CreateDataForXLSX(notes);
-    console.log(data);
-    // exportToExcel(data,"Notes");
+    // console.log(data);
+    exportToExcel(data, "Notes");
   }
 
   return (
