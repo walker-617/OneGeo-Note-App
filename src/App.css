@@ -27,17 +27,18 @@
   position: relative;
 }
 
-.error{
+.error {
   position: absolute;
   top: 0;
   color: white;
   margin: 5px;
   padding: 5px 10px;
   border-radius: 2px;
-  display: none;;
+  display: none;
+  ;
 }
 
-textarea{
+textarea {
   white-space: pre-wrap;
 }
 
@@ -70,7 +71,7 @@ textarea{
   position: relative;
 }
 
-.delete-note{
+.delete-note {
   position: absolute;
   top: -10px;
   right: -10px;
@@ -84,7 +85,7 @@ textarea{
   display: none;
 }
 
-.delete-note:hover{
+.delete-note:hover {
   color: rgb(216, 31, 31);
   background-color: white;
 }
@@ -101,7 +102,7 @@ textarea{
   font-weight: bold;
 }
 
-.note:hover{
+.note:hover {
   /* border: 2px solid lightgray; */
   box-shadow: 0 0 15px 5px lightgray;
 }
@@ -121,7 +122,7 @@ textarea{
   visibility: visible;
 }
 
-.export{
+.export {
   margin-left: auto;
   margin-right: calc(12.5vw - 23px);
   padding: 10px;
@@ -136,16 +137,16 @@ textarea{
   border-radius: 5px;
 }
 
-.xlicon{
+.xlicon {
   font-size: 20px;
 }
 
-.export:hover{
+.export:hover {
   background-color: black;
   color: white;
 }
 
-.header{
+.header {
   width: calc(75vw + 32px);
   display: flex;
   justify-content: space-between;
@@ -155,19 +156,35 @@ textarea{
   border-radius: 5px;
 }
 
-.title{
+.title {
   color: white;
   font-size: 30px;
   font-weight: bold;
-  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  /* flex-wrap: wrap; */
 }
 
-.logo{
+.note-title,
+.taker-title {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.note-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+}
+
+.logo {
   height: 30px;
   width: 30px;
 }
 
-.signin{
+.signin {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -176,7 +193,9 @@ textarea{
   color: white;
 }
 
-.google-icon, .upload-icon, .sync-icon{
+.google-icon,
+.upload-icon,
+.sync-icon {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -190,48 +209,66 @@ textarea{
   cursor: pointer;
 }
 
-.upload-icon, .sync-icon{
+.upload-icon,
+.sync-icon {
   /* background-color: rgb(207, 134, 0); */
   background-color: green;
   color: white;
 }
-.upload-icon:hover, .sync-icon:hover{
-  border: 2px solid white;;
+
+.upload-icon:hover,
+.sync-icon:hover {
+  border: 2px solid white;
+  ;
   background-color: black;
   color: white;
 }
 
-.google-icon:hover{
-  border: 2px solid white;;
+.google-icon:hover {
+  border: 2px solid white;
+  ;
   background-color: black;
   color: white;
 }
 
-.user{
+.user {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 5px;
 }
 
-.user-photo{
+.user-photo {
   width: 34px;
   height: 34px;
   border-radius: 2px;
 }
 
-.user-info{
+.user-info {
   display: flex;
   flex-direction: column;
   color: white;
 }
 
-.user-info :nth-child(1){
+.user-info :nth-child(1) {
   font-size: 20px;
   font-weight: bold;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
-.user-info :nth-child(2){
+.user-info :nth-child(2) {
   font-size: 10px;
+}
+
+@media (max-width: 600px) {
+  .title {
+    gap: 0px;
+    flex-direction: column;
+  }
+
+  .signin {
+    flex-direction: column;
+    font-size: 12px;
+    align-items: flex-end;
+  }
 }

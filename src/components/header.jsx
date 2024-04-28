@@ -104,9 +104,12 @@ function Header({ notes, setNotes, notesChanged, setNotesChanged }) {
     <div className="header">
       {!user && !loading ? (
         <>
-          <div className="user">
-            <img src={logo} alt="logo" className="logo"/>
-            <div className="title">NOTE TAKER</div>
+          <div className="title">
+            <div className="note-title">
+              <img src={logo} alt="logo" className="logo" />
+              OTE
+            </div>
+            <div className="taker-title">TAKER</div>
           </div>
           <div className="signin">
             <div>To save the notes, sign in with</div>
