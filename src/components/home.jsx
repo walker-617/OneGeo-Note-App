@@ -41,7 +41,6 @@ function Home() {
 
   function allowDrop(ev) {
     ev.preventDefault();
-    console.log("Hi");
   }
 
   function drag(ev, i) {
@@ -53,7 +52,7 @@ function Home() {
     var data = ev.dataTransfer.getData("text");
     const newNote = ev.target.value + (ev.target.value ? " " : "") + data;
     if (notes.includes(newNote)) {
-      setError("Note already exists", "rgb(216, 31, 31)");
+      setError("Note already exists", "rgb(216, 31, 31)",1);
       ev.dataTransfer?.clearData();
       return;
     }
@@ -75,20 +74,20 @@ function Home() {
     }
     if (notes.includes(note)) {
       if (note === "") {
-        setError("Empty note already exists", "rgb(216, 31, 31)");
+        setError("Empty note already exists", "rgb(216, 31, 31)",2);
       } else {
-        setError("Note already exists", "rgb(216, 31, 31)");
+        setError("Note already exists", "rgb(216, 31, 31)",2);
       }
       ev.dataTransfer?.clearData();
       // setPrevNote("");
       return;
     }
-    if (prevNote) {
-      setError("Note already exists", "rgb(216, 31, 31)");
-      ev.dataTransfer?.clearData();
-      // setPrevNote("");
-      return;
-    }
+    // if (prevNote) {
+    //   setError("Note already exists", "rgb(216, 31, 31)",3);
+    //   ev.dataTransfer?.clearData();
+    //   // setPrevNote("");
+    //   return;
+    // }
     updateChange();
     setNotes([...notes, note]);
     ev.dataTransfer?.clearData();
@@ -113,9 +112,9 @@ function Home() {
     }
     if (notes.includes(note)) {
       if (note === "") {
-        setError("Empty note already exists", "rgb(216, 31, 31)");
+        setError("Empty note already exists", "rgb(216, 31, 31)",4);
       } else {
-        setError("Note already exists", "rgb(216, 31, 31)");
+        setError("Note already exists", "rgb(216, 31, 31)",4);
       }
       ev.target.value = prevNote;
       setPrevNote("");
@@ -149,7 +148,8 @@ function Home() {
     setNotesChanged(false);
   }
 
-  function setError(error, color) {
+  function setError(error, color,i) {
+    console.log(i);
     document.getElementById("error").style.display = "block";
     document.getElementById("error").style.background = color;
     document.getElementById("error").innerText = error;
