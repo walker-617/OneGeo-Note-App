@@ -56,6 +56,8 @@ function Header({ notes, setNotes, notesChanged, setNotesChanged }) {
     signInWithPopup(getAuth(), new GoogleAuthProvider())
       .then((result) => {
         setUser(result.user);
+        setDatabaseChanged(false);
+        setNotesChanged(false);
       })
       .catch((error) => {
         console.log(error);
