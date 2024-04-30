@@ -39,13 +39,6 @@ function Home() {
     };
   }, []);
 
-  useEffect(() => {
-    let input=document.getElementById(`note${notes.length - 1}`);
-    let len = input?.value.length;
-    input?.setSelectionRange(len, len);
-    input?.focus();
-  }, [notes.length]);
-
   function allowDrop(ev) {
     ev.preventDefault();
   }
